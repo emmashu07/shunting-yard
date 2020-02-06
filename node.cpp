@@ -1,10 +1,14 @@
 #include "node.h"
 
 Node::Node(char data) {
-	this.data = data;
+	this->data = data;
+	previous = NULL;
+	next = NULL;
 }
 
 Node::~Node() {
+	//previous -> next = next;
+	//next -> previous = previous;
 }
 
 char Node::getData() {
@@ -15,7 +19,7 @@ Node* Node::getNext() {
 	return next;
 }
 
-Node* Node::getPrevious() {
+Node* Node::getPrev() {
 	return previous;
 }
 
@@ -23,6 +27,6 @@ void Node::setNext(Node* node) {
 	next = node;
 }
 
-void Node::setPrevious(Node* node) {
+void Node::setPrev(Node* node) {
 	previous = node;
 }
