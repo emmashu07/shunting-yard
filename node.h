@@ -1,3 +1,9 @@
+/*
+ * Emma Shu, 2/14/20: The node class is used for a doubly linked list
+ * for the binary expression tree but is also utilized for the stack and
+ * queue linked lists.
+ */
+
 #include <iostream>
 
 using namespace std;

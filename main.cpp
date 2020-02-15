@@ -1,3 +1,8 @@
+/*
+ * Emma Shu, 2/14/20: Shunting yard is an algorithm that will translate from an infix
+ * mathematical expression to a postfix expression.
+ */
+
 #include <iostream>
 #include <cstring>
 #include <cctype>
@@ -7,7 +12,7 @@ using namespace std;
 
 void push(Node* &stackHead, char data);
 void pop(Node* &stackHead);
-void peek(Node* head);
+char peek(Node* head);
 void enqueue(Node* &queueHead, char data);
 void dequeue(Node* &queueHead); 
 Node* returnTail(Node* queueHead);
@@ -16,6 +21,7 @@ int main() {
 	Node* stackHead = NULL;
 	Node* queueHead = NULL;
 	char input[20];
+	char postfix[20];
 	bool running = true;
 
 	while (running) {
@@ -24,33 +30,38 @@ int main() {
 		cin.ignore(20, '\n');
 		for(int i = 0; i < strlen(input); i++) {
 			if (!(isspace(input[i]))) {
+				char sHead = peek(stackHead);
 				if (isdigit(input[i])) {
 					enqueue(queueHead, input[i]);
 				}
 				else if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/' || input[i] == '^') {
-					if ((stackHead -> getData()) == '+' || (stackHead -> getData()) == '-') {
-						if ((input[i] == '+' || input[i] == '-') && (stackHead -> getData()) != '(') {
+					if (sHead == '+' || sHead == '-') {
+						if ((input[i] == '+' || input[i] == '-') && sHead != '(') {
 							enqueue(queueHead, input[i]);
 						}
 						else {
 							push(stackHead, input[i]);
 						}
 					}
-					else if ((stackHead -> getData()) == '*' || (stackHead -> getData()) == '/' || (stackHead -> getData()) == '^') {
-						if ((input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/') || (stackHead -> getData()) != '(') {
+					else if (sHead == '*' || sHead == '/' || sHead == '^') {
+						if ((input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/') || sHead != '(') {
 							enqueue(queueHead, input[i]);
 						}
 						else {
 							push(stackHead, input[i]);
 						}
+					}
+					else if (!stackHead) {
+						push(stackHead, input[i]);
 					}
 				}
 				else if (input[i] == '(') {
 					push(stackHead, input[i]);
 				}
 				else if (input[i] == ')') {
-					while ((stackHead -> getData()) != '(') {
-						enqueue(queueHead, (stackHead -> getData()));
+					while (sHead != '(') {
+						enqueue(queueHead, sHead);
+						cout << returnTail(queueHead) -> getData() << endl;
 						pop(stackHead);
 					}
 					pop(stackHead);
@@ -58,6 +69,19 @@ int main() {
 
 			}
 		}
+		while (stackHead) {
+			enqueue(queueHead, peek(stackHead));
+			pop(stackHead);
+		}
+		int num = 0;
+		while (queueHead) {
+			postfix[num] = peek(queueHead);
+			dequeue(queueHead);
+			num++;
+		}
+		postfix[num] = '\0';
+		cout << postfix << endl;	
+
 
 		/*cout << "Enter push, pop, peek, enqueue, or dequeue." << endl;
 		cin.get(input, 20);
@@ -85,10 +109,8 @@ int main() {
 			dequeue(queueHead);
 		}
 		else if (strcmp(input, "PEEK") == 0) {
-			cout << "Queue head: ";
-			peek(queueHead);
-			cout << "Stack head: ";
-			peek(stackHead);
+			cout << "Queue head: " << peek(queueHead) << endl;
+			cout << "Stack head: " << peek(stackHead) << endl;
 		}
 		else if (strcmp(input, "QUIT") == 0) {
 			running = false;
@@ -120,12 +142,9 @@ void pop(Node* &stackHead) {
 	}
 }
 
-void peek(Node* head) {
+char peek(Node* head) {
 	if (head) {
-		cout << head -> getData() << endl;
-	}
-	else {
-		cout << "Nothing to display." << endl;
+		return head -> getData();
 	}
 }
 
