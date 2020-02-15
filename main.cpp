@@ -51,6 +51,9 @@ int main() {
 							push(stackHead, input[i]);
 						}
 					}
+					else if (sHead == '(') {
+						push(stackHead, input[i]);
+					}
 					else if (!stackHead) {
 						push(stackHead, input[i]);
 					}
@@ -61,7 +64,6 @@ int main() {
 				else if (input[i] == ')') {
 					while (sHead != '(') {
 						enqueue(queueHead, sHead);
-						cout << returnTail(queueHead) -> getData() << endl;
 						pop(stackHead);
 					}
 					pop(stackHead);
