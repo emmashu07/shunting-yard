@@ -16,19 +16,22 @@ char peek(Node* head);
 void enqueue(Node* &queueHead, char data);
 void dequeue(Node* &queueHead); 
 Node* returnTail(Node* queueHead);
+int returnPrecedence(char operate);
+void translate(char* &input, Node* &stackHead, Node* &queueHead);
 
 int main() {
 	Node* stackHead = NULL;
 	Node* queueHead = NULL;
-	char input[20];
-	char postfix[20];
+	//char original[20];
+	char* postfix;
 	bool running = true;
 
 	while (running) {
 		cout << "Enter a mathematical expression: ";
-		cin.get(input, 20);
+		cin.get(postfix, 20);
 		cin.ignore(20, '\n');
-		for(int i = 0; i < strlen(input); i++) {
+		translate(postfix, stackHead, queueHead);
+		/*for(int i = 0; i < strlen(input); i++) {
 			if (!(isspace(input[i]))) {
 				char sHead = peek(stackHead);
 				if (isdigit(input[i])) {
@@ -37,7 +40,9 @@ int main() {
 				else if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/' || input[i] == '^') {
 					if (sHead == '+' || sHead == '-') {
 						if ((input[i] == '+' || input[i] == '-') && sHead != '(') {
-							enqueue(queueHead, input[i]);
+							enqueue(queueHead, sHead);
+							push(stackHead, input[i]);
+							sHead = peek(stackHead);
 						}
 						else {
 							push(stackHead, input[i]);
@@ -63,6 +68,7 @@ int main() {
 				}
 				else if (input[i] == ')') {
 					while (sHead != '(') {
+						sHead = peek(stackHead);
 						enqueue(queueHead, sHead);
 						pop(stackHead);
 					}
@@ -82,7 +88,7 @@ int main() {
 			num++;
 		}
 		postfix[num] = '\0';
-		cout << postfix << endl;	
+		cout << postfix << endl;*/	
 
 
 		/*cout << "Enter push, pop, peek, enqueue, or dequeue." << endl;
@@ -120,6 +126,18 @@ int main() {
 	}
 
 	return 0;
+}
+
+int returnPrecedence(char operate) {
+	if (operate == '^') {
+		return 3;
+	}
+	else if (operate == '*' || operate == '/') {
+		return 2;
+	}
+	else if (operate == '+' || operate == '-') {
+		return 1;
+	}
 }
 
 void push(Node* &stackHead, char data) {
@@ -184,4 +202,57 @@ void dequeue(Node* &queueHead) {
 	else {
 		cout << "Nothing is in the list!" << endl;
 	}
+}
+
+void translate(char* &input, Node* &stackHead, Node* &queueHead) {
+	for (int i = 0; i < strlen(input); i++) {
+		if (!isspace(input[i])) {
+			char sHead = peek(stackHead);
+			cout << sHead << endl;
+			if (isdigit(input[i])) {
+				enqueue(queueHead, input[i]);
+			}
+			else if (input[i] == '(') {
+				push(stackHead, input[i]);
+			}
+			else if (input[i] == ')') {
+				while (stackHead && sHead != '(') {
+					pop(stackHead);
+					enqueue(queueHead, sHead);
+					sHead = peek(stackHead);
+				}
+				sHead = peek(stackHead);
+				//cout << sHead << endl;
+				if (sHead == '(') {
+					cout << "I'm here" << endl;
+					pop(stackHead);
+				}
+			}
+			else {
+				while (stackHead && returnPrecedence(input[i]) <= returnPrecedence(sHead)) {
+					pop(stackHead);
+					enqueue(queueHead, sHead);
+				}
+				push(stackHead, input[i]);
+			}	
+		}
+ 
+	}
+	char sHead = peek(stackHead);
+	while (stackHead) {
+		pop(stackHead);
+		enqueue(queueHead, sHead);
+		sHead = peek(stackHead);
+	}
+	char postfix[20];
+	char ch = peek(queueHead);
+	int num = 0;
+	while (queueHead) {
+		dequeue(queueHead);
+		postfix[num] = ch;
+		ch = peek(queueHead);
+		num++;
+	}
+	postfix[num] = '\0';
+	cout << postfix << endl;	
 }
