@@ -138,6 +138,9 @@ int returnPrecedence(char operate) {
 	else if (operate == '+' || operate == '-') {
 		return 1;
 	}
+	else {
+		return -1;
+	}
 }
 
 void push(Node* &stackHead, char data) {
@@ -207,8 +210,6 @@ void dequeue(Node* &queueHead) {
 void translate(char* &input, Node* &stackHead, Node* &queueHead) {
 	for (int i = 0; i < strlen(input); i++) {
 		if (!isspace(input[i])) {
-			char sHead = peek(stackHead);
-			cout << sHead << endl;
 			if (isdigit(input[i])) {
 				enqueue(queueHead, input[i]);
 			}
@@ -216,20 +217,19 @@ void translate(char* &input, Node* &stackHead, Node* &queueHead) {
 				push(stackHead, input[i]);
 			}
 			else if (input[i] == ')') {
-				while (stackHead && sHead != '(') {
+				while (stackHead && peek(stackHead) != '(') {
+					char sHead = peek(stackHead);
 					pop(stackHead);
 					enqueue(queueHead, sHead);
-					sHead = peek(stackHead);
 				}
-				sHead = peek(stackHead);
-				//cout << sHead << endl;
-				if (sHead == '(') {
-					cout << "I'm here" << endl;
+				if (peek(stackHead) == '(') {
+					char sHead = peek(stackHead);
 					pop(stackHead);
 				}
 			}
 			else {
-				while (stackHead && returnPrecedence(input[i]) <= returnPrecedence(sHead)) {
+				while (stackHead && returnPrecedence(input[i]) <= returnPrecedence(peek(stackHead))) {
+					char sHead = peek(stackHead);
 					pop(stackHead);
 					enqueue(queueHead, sHead);
 				}
@@ -238,19 +238,17 @@ void translate(char* &input, Node* &stackHead, Node* &queueHead) {
 		}
  
 	}
-	char sHead = peek(stackHead);
 	while (stackHead) {
+		char sHead = peek(stackHead);
 		pop(stackHead);
 		enqueue(queueHead, sHead);
-		sHead = peek(stackHead);
 	}
 	char postfix[20];
-	char ch = peek(queueHead);
 	int num = 0;
 	while (queueHead) {
+		char qHead = peek(queueHead);
 		dequeue(queueHead);
-		postfix[num] = ch;
-		ch = peek(queueHead);
+		postfix[num] = qHead;
 		num++;
 	}
 	postfix[num] = '\0';
