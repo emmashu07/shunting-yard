@@ -17,13 +17,14 @@ void enqueue(Node* &queueHead, char data);
 void dequeue(Node* &queueHead); 
 Node* returnTail(Node* queueHead);
 int returnPrecedence(char operate);
-char* translate(char* &input, Node* &stackHead, Node* &queueHead);
+char* translate(char* input, Node* stackHead, Node* queueHead);
 
 int main() {
 	Node* stackHead = NULL;
 	Node* queueHead = NULL;
 	char* original;
 	char* postfix;
+	char input[20];
 	bool running = true;
 
 	while (running) {
@@ -31,8 +32,29 @@ int main() {
 		cin.get(original, 20);
 		cin.ignore(20, '\n');
 		postfix = translate(original, stackHead, queueHead);
-		cout << postfix << endl;
-	
+		cout << "Postfix: " << postfix << endl;
+		
+		cout << "Enter prefix, postfix, infix, or quit: ";
+		cin.get(input, 20);
+		cin.ignore(20, '\n');	
+
+		for (int i = 0; i < strlen(input); i++) {
+			input[i] = toupper(input[i]);
+		}
+
+		if (strcmp(input, "PREFIX") == 0) {
+
+		}
+		else if (strcmp(input, "POSTFIX") == 0) {
+			cout << postfix;
+		}
+		else if (strcmp(input, "INFIX") == 0) {
+			cout << original;
+		}
+		else if (strcmp(input, "QUIT") == 0) {
+			running = false;
+		}
+
 		// Failed algorithm.
 
 		/*for(int i = 0; i < strlen(input); i++) {
@@ -212,7 +234,7 @@ void dequeue(Node* &queueHead) {
 	}
 }
 
-char* translate(char* &input, Node* &stackHead, Node* &queueHead) {
+char* translate(char* input, Node* stackHead, Node* queueHead) {
 	for (int i = 0; i < strlen(input); i++) {
 		if (!isspace(input[i])) {
 			if (isdigit(input[i])) {
