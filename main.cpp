@@ -17,21 +17,22 @@ void enqueue(Node* &queueHead, char data);
 void dequeue(Node* &queueHead); 
 Node* returnTail(Node* queueHead);
 int returnPrecedence(char operate);
-void translate(char* &input, Node* &stackHead, Node* &queueHead);
+char* translate(char* &input, Node* &stackHead, Node* &queueHead);
 
 int main() {
 	Node* stackHead = NULL;
 	Node* queueHead = NULL;
-	//char original[20];
+	char* original;
 	char* postfix;
 	bool running = true;
 
 	while (running) {
 		cout << "Enter a mathematical expression: ";
-		cin.get(postfix, 20);
+		cin.get(original, 20);
 		cin.ignore(20, '\n');
-		translate(postfix, stackHead, queueHead);
-		
+		postfix = translate(original, stackHead, queueHead);
+		cout << postfix << endl;
+	
 		// Failed algorithm.
 
 		/*for(int i = 0; i < strlen(input); i++) {
@@ -211,7 +212,7 @@ void dequeue(Node* &queueHead) {
 	}
 }
 
-void translate(char* &input, Node* &stackHead, Node* &queueHead) {
+char* translate(char* &input, Node* &stackHead, Node* &queueHead) {
 	for (int i = 0; i < strlen(input); i++) {
 		if (!isspace(input[i])) {
 			if (isdigit(input[i])) {
@@ -249,7 +250,7 @@ void translate(char* &input, Node* &stackHead, Node* &queueHead) {
 		pop(stackHead);
 		enqueue(queueHead, sHead);
 	}
-	char postfix[20];
+	char* postfix;
 	int num = 0;
 	while (queueHead) {
 		char qHead = peek(queueHead);
@@ -258,5 +259,5 @@ void translate(char* &input, Node* &stackHead, Node* &queueHead) {
 		num++;
 	}
 	postfix[num] = '\0';
-	cout << postfix << endl;	
+	return postfix;	
 }
