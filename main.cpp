@@ -31,6 +31,9 @@ int main() {
 		cin.get(postfix, 20);
 		cin.ignore(20, '\n');
 		translate(postfix, stackHead, queueHead);
+		
+		// Failed algorithm.
+
 		/*for(int i = 0; i < strlen(input); i++) {
 			if (!(isspace(input[i]))) {
 				char sHead = peek(stackHead);
@@ -90,6 +93,7 @@ int main() {
 		postfix[num] = '\0';
 		cout << postfix << endl;*/	
 
+		// Testing if all functions had worked for stack and queue.
 
 		/*cout << "Enter push, pop, peek, enqueue, or dequeue." << endl;
 		cin.get(input, 20);
@@ -223,12 +227,14 @@ void translate(char* &input, Node* &stackHead, Node* &queueHead) {
 					enqueue(queueHead, sHead);
 				}
 				if (peek(stackHead) == '(') {
-					char sHead = peek(stackHead);
 					pop(stackHead);
 				}
 			}
 			else {
 				while (stackHead && returnPrecedence(input[i]) <= returnPrecedence(peek(stackHead))) {
+					if (returnPrecedence(input[i]) == returnPrecedence(peek(stackHead)) && input[i] == '^') {
+						break;
+					}
 					char sHead = peek(stackHead);
 					pop(stackHead);
 					enqueue(queueHead, sHead);
