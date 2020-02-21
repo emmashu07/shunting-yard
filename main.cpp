@@ -17,20 +17,20 @@ void enqueue(Node* &queueHead, char data);
 void dequeue(Node* &queueHead); 
 Node* returnTail(Node* queueHead);
 int returnPrecedence(char operate);
-char* translate(char* input, Node* stackHead, Node* queueHead);
+char* translate(char* input, Node* &stackHead, Node* &queueHead);
 
 int main() {
 	Node* stackHead = NULL;
 	Node* queueHead = NULL;
-	char* original;
-	char* postfix;
-	char input[20];
+	char* original = new char[100];
+	char* postfix = new char[100];
+	char input[100];
 	bool running = true;
 
 	while (running) {
 		cout << "Enter a mathematical expression: ";
-		cin.get(original, 20);
-		cin.ignore(20, '\n');
+		cin.get(original, 100);
+		cin.ignore(100, '\n');
 		postfix = translate(original, stackHead, queueHead);
 		cout << "Postfix: " << postfix << endl;
 		
@@ -46,10 +46,10 @@ int main() {
 
 		}
 		else if (strcmp(input, "POSTFIX") == 0) {
-			cout << postfix;
+			cout << postfix << endl;
 		}
 		else if (strcmp(input, "INFIX") == 0) {
-			cout << original;
+			cout << original << endl;
 		}
 		else if (strcmp(input, "QUIT") == 0) {
 			running = false;
@@ -234,7 +234,7 @@ void dequeue(Node* &queueHead) {
 	}
 }
 
-char* translate(char* input, Node* stackHead, Node* queueHead) {
+char* translate(char* input, Node* &stackHead, Node* &queueHead) {
 	for (int i = 0; i < strlen(input); i++) {
 		if (!isspace(input[i])) {
 			if (isdigit(input[i])) {
@@ -272,7 +272,7 @@ char* translate(char* input, Node* stackHead, Node* queueHead) {
 		pop(stackHead);
 		enqueue(queueHead, sHead);
 	}
-	char* postfix;
+	char* postfix = new char[100];
 	int num = 0;
 	while (queueHead) {
 		char qHead = peek(queueHead);
