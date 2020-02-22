@@ -155,7 +155,7 @@ int main() {
 	return 0;
 }
 
-int returnPrecedence(char operate) {
+int returnPrecedence(char operate) { // Used during comparison in algorithm.
 	if (operate == '^') {
 		return 3;
 	}
@@ -170,7 +170,7 @@ int returnPrecedence(char operate) {
 	}
 }
 
-void push(Node* &stackHead, char data) {
+void push(Node* &stackHead, char data) { // Add to front of stack.
 	if (!stackHead) {
 		stackHead = new Node(data);
 	}
@@ -181,7 +181,7 @@ void push(Node* &stackHead, char data) {
 	}
 }
 
-void pop(Node* &stackHead) {
+void pop(Node* &stackHead) { // Remove the front of stack.
 	if (stackHead) {
 		Node* temp = stackHead;
 		stackHead = stackHead -> getNext();
@@ -192,13 +192,13 @@ void pop(Node* &stackHead) {
 	}
 }
 
-char peek(Node* head) {
+char peek(Node* head) { // Return the data of the head of stack or queue.
 	if (head) {
 		return head -> getData();
 	}
 }
 
-Node* returnTail(Node* queueHead) {
+Node* returnTail(Node* queueHead) { // Used for enqueue.
 	if (queueHead) {
 		if (!(queueHead -> getNext())) {
 			return queueHead;	
@@ -212,7 +212,7 @@ Node* returnTail(Node* queueHead) {
 	}
 }
 
-void enqueue(Node* &queueHead, char data) {
+void enqueue(Node* &queueHead, char data) { // Add node to the tail of the queue.
 	Node* tail = returnTail(queueHead);
 	Node* newNode = new Node(data);
 	if (tail) {
@@ -223,7 +223,7 @@ void enqueue(Node* &queueHead, char data) {
 	}			
 }
 
-void dequeue(Node* &queueHead) {
+void dequeue(Node* &queueHead) { // Remove node from the front of the stack.
 	if (queueHead) {
 		Node* temp = queueHead;
 		queueHead = queueHead -> getNext();
@@ -234,10 +234,10 @@ void dequeue(Node* &queueHead) {
 	}
 }
 
-char* translate(char* input, Node* &stackHead, Node* &queueHead) {
+char* translate(char* input, Node* &stackHead, Node* &queueHead) { // Shunting yard algorithm.
 	for (int i = 0; i < strlen(input); i++) {
 		if (!isspace(input[i])) {
-			if (isdigit(input[i])) {
+			if (isdigit(input[i])) { // Is operand.
 				enqueue(queueHead, input[i]);
 			}
 			else if (input[i] == '(') {
@@ -253,11 +253,11 @@ char* translate(char* input, Node* &stackHead, Node* &queueHead) {
 					pop(stackHead);
 				}
 			}
-			else {
+			else { // Is operator.
 				while (stackHead && returnPrecedence(input[i]) <= returnPrecedence(peek(stackHead))) {
 					if (returnPrecedence(input[i]) == returnPrecedence(peek(stackHead)) && input[i] == '^') {
 						break;
-					}
+					} // Right associative.
 					char sHead = peek(stackHead);
 					pop(stackHead);
 					enqueue(queueHead, sHead);
@@ -267,14 +267,14 @@ char* translate(char* input, Node* &stackHead, Node* &queueHead) {
 		}
  
 	}
-	while (stackHead) {
+	while (stackHead) { // Empty stack into queue.
 		char sHead = peek(stackHead);
 		pop(stackHead);
 		enqueue(queueHead, sHead);
 	}
 	char* postfix = new char[100];
 	int num = 0;
-	while (queueHead) {
+	while (queueHead) { // Empty queue into a char array.
 		char qHead = peek(queueHead);
 		dequeue(queueHead);
 		postfix[num] = qHead;
@@ -285,16 +285,16 @@ char* translate(char* input, Node* &stackHead, Node* &queueHead) {
 	return postfix;	
 }
 
-void makeTree(char* postfix, Node* &stackHead) {
+void makeTree(char* postfix, Node* &stackHead) { // Create binary expression tree.
 	for (int i = 0; i < strlen(postfix); i++) {
-		if (isdigit(postfix[i])) {
+		if (isdigit(postfix[i])) { // Is operand.
 			push(stackHead, postfix[i]);
 		}
 		else {
-			if (!isspace(postfix[i])) {
+			if (!isspace(postfix[i])) { // Is operator.
 				Node* left = new Node(peek(stackHead));
 				left -> setLeft(stackHead -> getLeft());
-				left -> setRight(stackHead -> getRight());
+				left -> setRight(stackHead -> getRight()); // Preserve lost pointers.
 				pop(stackHead);
 				Node* right = new Node(peek(stackHead));
 				right -> setRight(stackHead -> getRight());
@@ -308,7 +308,7 @@ void makeTree(char* postfix, Node* &stackHead) {
 	}
 }	
 
-void printInfix(Node* stackHead) {
+void printInfix(Node* stackHead) { // Traverse through with parentheses for PEMAS.
 	if (stackHead) {
 		if (!isdigit(peek(stackHead))) {
 			cout << '(' << ' ';
