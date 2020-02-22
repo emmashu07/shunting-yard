@@ -22,12 +22,13 @@ void makeTree(char* postfix, Node* &stackHead);
 void printPrefix(Node* stackHead);
 void printPostfix(Node* stackHead);
 void printInfix(Node* stackHead);
+void destroyTree(Node* stackHead);
 
 int main() {
 	Node* stackHead = NULL;
 	Node* queueHead = NULL;
 	char* original = new char[100];
-	char* postfix = new char[100];
+	char* postfix;
 	char input[100];
 
 	cout << "Enter a mathematical expression: ";
@@ -58,6 +59,9 @@ int main() {
 		printInfix(stackHead);
 		cout << endl;
 	}
+	destroyTree(stackHead);
+	delete[] postfix;
+	delete[] original;
 
 	// Failed algorithm.
 
@@ -330,7 +334,7 @@ void printPrefix(Node* stackHead) { // Print prefix, print before continuing.
 	}
 }
 
-void printPostfix(Node* stackHead) {
+void printPostfix(Node* stackHead) { // Print postfix, print after continuing.
 	if (stackHead) {
 		printPostfix(stackHead -> getLeft());
 		printPostfix(stackHead -> getRight());
@@ -339,3 +343,10 @@ void printPostfix(Node* stackHead) {
 
 }
 
+void destroyTree(Node* stackHead) {
+	if (stackHead) {
+		destroyTree(stackHead -> getLeft());
+		destroyTree(stackHead -> getRight());
+		delete stackHead;
+	}
+}
