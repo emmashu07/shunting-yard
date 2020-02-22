@@ -18,6 +18,10 @@ void dequeue(Node* &queueHead);
 Node* returnTail(Node* queueHead);
 int returnPrecedence(char operate);
 char* translate(char* input, Node* &stackHead, Node* &queueHead);
+void makeTree(char* postfix, Node* &stackHead);
+void printPrefix(Node* stackHead);
+void printPostfix(Node* stackHead);
+void printInfix(Node* stackHead);
 
 int main() {
 	Node* stackHead = NULL;
@@ -25,132 +29,128 @@ int main() {
 	char* original = new char[100];
 	char* postfix = new char[100];
 	char input[100];
-	bool running = true;
 
-	while (running) {
-		cout << "Enter a mathematical expression: ";
-		cin.get(original, 100);
-		cin.ignore(100, '\n');
-		postfix = translate(original, stackHead, queueHead);
-		cout << "Postfix: " << postfix << endl;
-		
-		cout << "Enter prefix, postfix, infix, or quit: ";
-		cin.get(input, 20);
-		cin.ignore(20, '\n');	
+	cout << "Enter a mathematical expression: ";
+	cin.get(original, 100);
+	cin.ignore(100, '\n');
+	postfix = translate(original, stackHead, queueHead);
+	cout << "Postfix: " << postfix << endl;
+	
+	cout << "Enter prefix, postfix, or infix: ";
+	cin.get(input, 20);
+	cin.ignore(20, '\n');	
 
-		for (int i = 0; i < strlen(input); i++) {
-			input[i] = toupper(input[i]);
-		}
+	makeTree(postfix, stackHead);
+	
+	for (int i = 0; i < strlen(input); i++) {
+		input[i] = toupper(input[i]);
+	}
 
-		if (strcmp(input, "PREFIX") == 0) {
+	if (strcmp(input, "PREFIX") == 0) {
+		printPrefix(stackHead);
+		cout << endl;
+	}
+	else if (strcmp(input, "POSTFIX") == 0) {
+		printPostfix(stackHead);
+		cout << endl;
+	}
+	else if (strcmp(input, "INFIX") == 0) {
+		printInfix(stackHead);
+		cout << endl;
+	}
 
-		}
-		else if (strcmp(input, "POSTFIX") == 0) {
-			cout << postfix << endl;
-		}
-		else if (strcmp(input, "INFIX") == 0) {
-			cout << original << endl;
-		}
-		else if (strcmp(input, "QUIT") == 0) {
-			running = false;
-		}
+	// Failed algorithm.
 
-		// Failed algorithm.
-
-		/*for(int i = 0; i < strlen(input); i++) {
-			if (!(isspace(input[i]))) {
-				char sHead = peek(stackHead);
-				if (isdigit(input[i])) {
-					enqueue(queueHead, input[i]);
-				}
-				else if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/' || input[i] == '^') {
-					if (sHead == '+' || sHead == '-') {
-						if ((input[i] == '+' || input[i] == '-') && sHead != '(') {
-							enqueue(queueHead, sHead);
-							push(stackHead, input[i]);
-							sHead = peek(stackHead);
-						}
-						else {
-							push(stackHead, input[i]);
-						}
-					}
-					else if (sHead == '*' || sHead == '/' || sHead == '^') {
-						if ((input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/') || sHead != '(') {
-							enqueue(queueHead, input[i]);
-						}
-						else {
-							push(stackHead, input[i]);
-						}
-					}
-					else if (sHead == '(') {
+	/*for(int i = 0; i < strlen(input); i++) {
+		if (!(isspace(input[i]))) {
+			char sHead = peek(stackHead);
+			if (isdigit(input[i])) {
+				enqueue(queueHead, input[i]);
+			}
+			else if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/' || input[i] == '^') {
+				if (sHead == '+' || sHead == '-') {
+					if ((input[i] == '+' || input[i] == '-') && sHead != '(') {
+						enqueue(queueHead, sHead);
 						push(stackHead, input[i]);
+						sHead = peek(stackHead);
 					}
-					else if (!stackHead) {
+					else {
 						push(stackHead, input[i]);
 					}
 				}
-				else if (input[i] == '(') {
+				else if (sHead == '*' || sHead == '/' || sHead == '^') {
+					if ((input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/') || sHead != '(') {
+						enqueue(queueHead, input[i]);
+					}
+					else {
+						push(stackHead, input[i]);
+					}
+				}
+				else if (sHead == '(') {
 					push(stackHead, input[i]);
 				}
-				else if (input[i] == ')') {
-					while (sHead != '(') {
-						sHead = peek(stackHead);
-						enqueue(queueHead, sHead);
-						pop(stackHead);
-					}
+				else if (!stackHead) {
+					push(stackHead, input[i]);
+				}
+			}
+			else if (input[i] == '(') {
+				push(stackHead, input[i]);
+			}
+			else if (input[i] == ')') {
+				while (sHead != '(') {
+					sHead = peek(stackHead);
+					enqueue(queueHead, sHead);
 					pop(stackHead);
 				}
-
+				pop(stackHead);
 			}
-		}
-		while (stackHead) {
-			enqueue(queueHead, peek(stackHead));
-			pop(stackHead);
-		}
-		int num = 0;
-		while (queueHead) {
-			postfix[num] = peek(queueHead);
-			dequeue(queueHead);
-			num++;
-		}
-		postfix[num] = '\0';
-		cout << postfix << endl;*/	
 
-		// Testing if all functions had worked for stack and queue.
-
-		/*cout << "Enter push, pop, peek, enqueue, or dequeue." << endl;
-		cin.get(input, 20);
-		cin.ignore(20, '\n');
-		for (int i = 0; i < strlen(input); i++) {
-			input[i] = toupper(input[i]);
 		}
-		
-		if (strcmp(input, "PUSH") == 0 || strcmp(input, "ENQUEUE") == 0) {
-			char charInput;
-			cout << "Enter a character." << endl;
-			cin >> charInput;
-			cin.ignore();
-			if (strcmp(input, "PUSH") == 0) {
-				push(stackHead, charInput);
-			}
-			else {
-				enqueue(queueHead, charInput);
-			}
-		}
-		else if (strcmp(input, "POP") == 0) {
-			pop(stackHead);
-		}
-		else if (strcmp(input, "DEQUEUE") == 0) {
-			dequeue(queueHead);
-		}
-		else if (strcmp(input, "PEEK") == 0) {
-			cout << "Queue head: " << peek(queueHead) << endl;
-			cout << "Stack head: " << peek(stackHead) << endl;
-		}
-		else if (strcmp(input, "QUIT") == 0) {
-			running = false;
-		}*/
 	}
+	while (stackHead) {
+		enqueue(queueHead, peek(stackHead));
+		pop(stackHead);
+	}
+	int num = 0;
+	while (queueHead) {
+		postfix[num] = peek(queueHead);
+		dequeue(queueHead);
+		num++;
+	}
+	postfix[num] = '\0';
+	cout << postfix << endl;*/	
+
+	// Testing if all functions had worked for stack and queue.
+
+	/*cout << "Enter push, pop, peek, enqueue, or dequeue." << endl;
+	cin.get(input, 20);
+	cin.ignore(20, '\n');
+	for (int i = 0; i < strlen(input); i++) {
+		input[i] = toupper(input[i]);
+	}
+	
+	if (strcmp(input, "PUSH") == 0 || strcmp(input, "ENQUEUE") == 0) {
+		char charInput;
+		cout << "Enter a character." << endl;
+		cin >> charInput;
+		cin.ignore();
+		if (strcmp(input, "PUSH") == 0) {
+			push(stackHead, charInput);
+		}
+		else {
+			enqueue(queueHead, charInput);
+		}
+	}
+	else if (strcmp(input, "POP") == 0) {
+		pop(stackHead);
+	}
+	else if (strcmp(input, "DEQUEUE") == 0) {
+		dequeue(queueHead);
+	}
+	else if (strcmp(input, "PEEK") == 0) {
+		cout << "Queue head: " << peek(queueHead) << endl;
+		cout << "Stack head: " << peek(stackHead) << endl;
+	}*/
 
 	return 0;
 }
@@ -278,8 +278,64 @@ char* translate(char* input, Node* &stackHead, Node* &queueHead) {
 		char qHead = peek(queueHead);
 		dequeue(queueHead);
 		postfix[num] = qHead;
-		num++;
+		postfix[num+1] = ' ';
+		num += 2;
 	}
 	postfix[num] = '\0';
 	return postfix;	
 }
+
+void makeTree(char* postfix, Node* &stackHead) {
+	for (int i = 0; i < strlen(postfix); i++) {
+		if (isdigit(postfix[i])) {
+			push(stackHead, postfix[i]);
+		}
+		else {
+			if (!isspace(postfix[i])) {
+				Node* left = new Node(peek(stackHead));
+				left -> setLeft(stackHead -> getLeft());
+				left -> setRight(stackHead -> getRight());
+				pop(stackHead);
+				Node* right = new Node(peek(stackHead));
+				right -> setRight(stackHead -> getRight());
+				right -> setLeft(stackHead -> getLeft());
+				pop(stackHead);
+				push(stackHead, postfix[i]);
+				stackHead -> setLeft(left);
+				stackHead -> setRight(right);
+			}
+		}
+	}
+}	
+
+void printInfix(Node* stackHead) {
+	if (stackHead) {
+		if (!isdigit(peek(stackHead))) {
+			cout << '(' << ' ';
+		}
+		printInfix(stackHead -> getLeft());
+		cout << peek(stackHead) << ' ';
+		printInfix(stackHead -> getRight());
+		if (!isdigit(peek(stackHead))) {
+			cout << ')' << ' ';
+		}
+	}
+}
+
+void printPrefix(Node* stackHead) {
+	if (stackHead) {
+		cout << peek(stackHead) << ' ';
+		printPrefix(stackHead -> getLeft());
+		printPrefix(stackHead -> getRight());
+	}
+}
+
+void printPostfix(Node* stackHead) {
+	if (stackHead) {
+		printPostfix(stackHead -> getLeft());
+		printPostfix(stackHead -> getRight());
+		cout << peek(stackHead) << ' ';
+	}
+
+}
+
