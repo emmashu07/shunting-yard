@@ -322,7 +322,7 @@ void printInfix(Node* stackHead) { // Traverse through with parentheses for PEMA
 	}
 }
 
-void printPrefix(Node* stackHead) {
+void printPrefix(Node* stackHead) { // Print prefix, print before continuing.
 	if (stackHead) {
 		cout << peek(stackHead) << ' ';
 		printPrefix(stackHead -> getLeft());
