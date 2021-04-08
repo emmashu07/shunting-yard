@@ -1,5 +1,5 @@
 /*
- * Emma Shu, 2/14/MAX_CHAR: Shunting yard is an algorithm that will translate from an infix
+ * Emma Shu, 2/14/20: Shunting yard is an algorithm that will translate from an infix
  * mathematical expression to a postfix expression.
  */
 
