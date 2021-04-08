@@ -1,5 +1,5 @@
 /*
- * Emma Shu, 2/14/20: Shunting yard is an algorithm that will translate from an infix
+ * Emma Shu, 2/14/MAX_CHAR: Shunting yard is an algorithm that will translate from an infix
  * mathematical expression to a postfix expression.
  */
 
@@ -24,22 +24,24 @@ void printPostfix(Node* stackHead);
 void printInfix(Node* stackHead);
 void destroyTree(Node* stackHead);
 
+const int MAX_CHAR = 100;
+
 int main() {
 	Node* stackHead = NULL;
 	Node* queueHead = NULL;
-	char* original = new char[100];
+	char* original = new char[MAX_CHAR];
 	char* postfix;
-	char input[100];
+	char input[MAX_CHAR];
 
 	cout << "Enter a mathematical expression: ";
-	cin.get(original, 100);
-	cin.ignore(100, '\n');
+	cin.get(original, MAX_CHAR);
+	cin.ignore(MAX_CHAR, '\n');
 	postfix = translate(original, stackHead, queueHead);
 	cout << "Postfix: " << postfix << endl;
 	
 	cout << "Enter prefix, postfix, or infix: ";
-	cin.get(input, 20);
-	cin.ignore(20, '\n');	
+	cin.get(input, MAX_CHAR);
+	cin.ignore(MAX_CHAR, '\n');	
 
 	makeTree(postfix, stackHead);
 	
@@ -62,99 +64,6 @@ int main() {
 	destroyTree(stackHead);
 	delete[] postfix;
 	delete[] original;
-
-	// Failed algorithm.
-
-	/*for(int i = 0; i < strlen(input); i++) {
-		if (!(isspace(input[i]))) {
-			char sHead = peek(stackHead);
-			if (isdigit(input[i])) {
-				enqueue(queueHead, input[i]);
-			}
-			else if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/' || input[i] == '^') {
-				if (sHead == '+' || sHead == '-') {
-					if ((input[i] == '+' || input[i] == '-') && sHead != '(') {
-						enqueue(queueHead, sHead);
-						push(stackHead, input[i]);
-						sHead = peek(stackHead);
-					}
-					else {
-						push(stackHead, input[i]);
-					}
-				}
-				else if (sHead == '*' || sHead == '/' || sHead == '^') {
-					if ((input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/') || sHead != '(') {
-						enqueue(queueHead, input[i]);
-					}
-					else {
-						push(stackHead, input[i]);
-					}
-				}
-				else if (sHead == '(') {
-					push(stackHead, input[i]);
-				}
-				else if (!stackHead) {
-					push(stackHead, input[i]);
-				}
-			}
-			else if (input[i] == '(') {
-				push(stackHead, input[i]);
-			}
-			else if (input[i] == ')') {
-				while (sHead != '(') {
-					sHead = peek(stackHead);
-					enqueue(queueHead, sHead);
-					pop(stackHead);
-				}
-				pop(stackHead);
-			}
-
-		}
-	}
-	while (stackHead) {
-		enqueue(queueHead, peek(stackHead));
-		pop(stackHead);
-	}
-	int num = 0;
-	while (queueHead) {
-		postfix[num] = peek(queueHead);
-		dequeue(queueHead);
-		num++;
-	}
-	postfix[num] = '\0';
-	cout << postfix << endl;*/	
-
-	// Testing if all functions had worked for stack and queue.
-
-	/*cout << "Enter push, pop, peek, enqueue, or dequeue." << endl;
-	cin.get(input, 20);
-	cin.ignore(20, '\n');
-	for (int i = 0; i < strlen(input); i++) {
-		input[i] = toupper(input[i]);
-	}
-	
-	if (strcmp(input, "PUSH") == 0 || strcmp(input, "ENQUEUE") == 0) {
-		char charInput;
-		cout << "Enter a character." << endl;
-		cin >> charInput;
-		cin.ignore();
-		if (strcmp(input, "PUSH") == 0) {
-			push(stackHead, charInput);
-		}
-		else {
-			enqueue(queueHead, charInput);
-		}
-	}
-	else if (strcmp(input, "POP") == 0) {
-		pop(stackHead);
-	}
-	else if (strcmp(input, "DEQUEUE") == 0) {
-		dequeue(queueHead);
-	}
-	else if (strcmp(input, "PEEK") == 0) {
-		cout << "Queue head: " << peek(queueHead) << endl;
-		cout << "Stack head: " << peek(stackHead) << endl;
-	}*/
 
 	return 0;
 }
@@ -276,7 +185,7 @@ char* translate(char* input, Node* &stackHead, Node* &queueHead) { // Shunting y
 		pop(stackHead);
 		enqueue(queueHead, sHead);
 	}
-	char* postfix = new char[100];
+	char* postfix = new char[MAX_CHAR];
 	int num = 0;
 	while (queueHead) { // Empty queue into a char array.
 		char qHead = peek(queueHead);
